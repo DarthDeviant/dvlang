@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Minimal Desktop</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Courier New', Courier, monospace;
+      background: #f5f5f5;
+      color: #333;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    /* Top navigation */
+    .top-nav {
+      display: flex;
+      justify-content: space-between;
+      width: 90%;
+      margin-top: 20px;
+    }
+
+    .top-nav a {
+      text-decoration: none;
+      color: #666;
+      font-size: 14px;
+      transition: color 0.3s;
+    }
+
+    .top-nav a:hover {
+      color: #000;
+    }
+
+    /* Desktop-style content */
+    .desktop {
+      flex: 1;
+      position: relative;
+      width: 100%;
+      max-width: 1200px;
+      overflow: hidden;
+    }
+
+    .movable {
+      position: absolute;
+      cursor: grab;
+      transition: transform 0.3s;
+    }
+
+    .movable img {
+      width: 100px;
+      height: auto;
+    }
+
+
+
+    .center-image {
+      width: 200px;
+      height: 200px;
+      cursor: pointer;
+      transform: translate(-50%, -50%);
+    }
+
+    /* Footer */
+    footer {
+      font-size: 12px;
+      color: #888;
+      margin-bottom: 20px;
+    }
+
+    footer a {
+      text-decoration: none;
+      color: #888;
+      margin: 0 10px;
+      transition: color 0.3s;
+    }
+
+    footer a:hover {
+      color: #000;
+    }
+  </style>
+</head>
+<body>
+  <div class="top-nav">
+    <a href="https://open.spotify.com/artist/5VEBUmdpm4TJF02VCuj1uq?si=_0JNtTKfRu2X4N4WCwWsLA" target="_blank">music</a>
+    <a href="https://darthdeviance.printify.me/" target="_blank">store →</a>
+    <a href="https://www.youtube.com/@darthdeviance" target="_blank">tour</a>
+  </div>
+  <div class="desktop">
+    <!-- Yellow Folder -->
+    <a href="https://untitled.stream/library/project/pl3LAry3TLMzvur6dDVas" class="movable" id="yellow-folder" style="top: 20%; left: 30%;">
+      <img src="images/yellow-image.jpg" alt="Yellow Folder">
+    </a>
+
+    <!-- Gray Folder -->
+    <a href="https://untitled.stream/library/project/wINlzOmMpI9fosr8ON68w" class="movable" id="gray-folder" style="top: 20%; left: 70%;">
+      <img src="images/gray-image.jpg" alt="Gray Folder">
+    </a>
+
+    <!-- Center Image -->
+    <a href="https://untitled.stream/library/project/SDB2RGINBSbjDQT5H0aCm" target="_blank" class="movable" id="center-image" style="top: 50%; left: 50%;">
+      <img src="images/center-image.jpg" alt="Center Image" class="center-image">
+    </a>
+  </div>
+  <footer>
+    <a href="https://bsky.app/profile/darthdeviance.bsky.social" target="_blank">bsky</a> / 
+    <a href="https://www.reddit.com/user/Gloomy_Reference_160/" target="_blank">reddit</a> / 
+    <a href="https://www.youtube.com/@darthdeviance" target="_blank">youtube</a> / 
+    <a href="https://www.instagram.com/_dvyns/" target="_blank">instagram</a>
+  </footer>
+
+  <script>
+    // Make elements draggable
+    const elements = document.querySelectorAll('.movable');
+    elements.forEach(el => {
+      el.addEventListener('mousedown', (e) => {
+        e.preventDefault();
+        const rect = el.getBoundingClientRect();
+        const offsetX = e.clientX - rect.left;
+        const offsetY = e.clientY - rect.top;
+
+        function moveAt(mouseEvent) {
+          el.style.left = `${mouseEvent.clientX - offsetX}px`;
+          el.style.top = `${mouseEvent.clientY - offsetY}px`;
+        }
+
+        function stopMoving() {
+          document.removeEventListener('mousemove', moveAt);
+          document.removeEventListener('mouseup', stopMoving);
+        }
+
+        document.addEventListener('mousemove', moveAt);
+        document.addEventListener('mouseup', stopMoving);
+      });
+    });
+  </script>
+</body>
+</html>

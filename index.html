@@ -60,7 +60,6 @@
       width: 200px;
       height: 200px;
       cursor: pointer;
-      transform: translate(-50%, -50%);
     }
 
     /* Footer */
@@ -135,6 +134,7 @@
       
       const onMouseDown = (e) => {
         e.preventDefault();
+        el.style.border = '2px dotted #888'; // Add dotted border on drag start
         const rect = el.getBoundingClientRect();
         offsetX = e.clientX - rect.left;
         offsetY = e.clientY - rect.top;
@@ -145,6 +145,7 @@
         }
 
         function onMouseUp() {
+          el.style.border = ''; // Remove dotted border on drag end
           document.removeEventListener('mousemove', onMouseMove);
           document.removeEventListener('mouseup', onMouseUp);
         }
@@ -156,6 +157,7 @@
       // Touch events for mobile
       const onTouchStart = (e) => {
         e.preventDefault();
+        el.style.border = '2px dotted #888'; // Add dotted border on drag start
         const rect = el.getBoundingClientRect();
         const touch = e.touches[0];
         offsetX = touch.clientX - rect.left;
@@ -168,6 +170,7 @@
         }
 
         function onTouchEnd() {
+          el.style.border = ''; // Remove dotted border on drag end
           document.removeEventListener('touchmove', onTouchMove);
           document.removeEventListener('touchend', onTouchEnd);
         }

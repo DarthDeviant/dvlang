@@ -67,6 +67,7 @@
       position: absolute;
       border: 2px dotted black;
       display: none;
+      pointer-events: none; /* Prevent interference */
     }
 
     /* Footer */
@@ -135,10 +136,7 @@
 
         // Handle the center image specifically
         if (el === centerImage) {
-          centerBorder.style.width = `${rect.width}px`;
-          centerBorder.style.height = `${rect.height}px`;
-          centerBorder.style.left = `${rect.left}px`;
-          centerBorder.style.top = `${rect.top}px`;
+          updateBorder(rect);
           centerBorder.style.display = 'block';
         }
 
@@ -151,8 +149,7 @@
 
           // Move the border along with the center image
           if (el === centerImage) {
-            centerBorder.style.left = `${left}px`;
-            centerBorder.style.top = `${top}px`;
+            updateBorder(el.getBoundingClientRect());
           }
         }
 
@@ -168,6 +165,13 @@
         document.addEventListener('mouseup', stopMoving);
       });
     });
+
+    function updateBorder(rect) {
+      centerBorder.style.width = `${rect.width}px`;
+      centerBorder.style.height = `${rect.height}px`;
+      centerBorder.style.left = `${rect.left}px`;
+      centerBorder.style.top = `${rect.top}px`;
+    }
   </script>
 </body>
 </html>

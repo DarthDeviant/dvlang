@@ -56,8 +56,6 @@
       height: auto;
     }
 
-
-
     .center-image {
       width: 200px;
       height: 200px;
@@ -81,6 +79,23 @@
 
     footer a:hover {
       color: #000;
+    }
+
+    /* Make the layout responsive */
+    @media (max-width: 768px) {
+      .desktop {
+        max-width: 100%;
+        width: 100%;
+      }
+
+      .movable img {
+        width: 80px;
+      }
+
+      .center-image {
+        width: 150px;
+        height: 150px;
+      }
     }
   </style>
 </head>
@@ -114,29 +129,60 @@
   </footer>
 
   <script>
-    // Make elements draggable
-    const elements = document.querySelectorAll('.movable');
-    elements.forEach(el => {
-      el.addEventListener('mousedown', (e) => {
+    // Function to make elements draggable
+    function makeDraggable(el) {
+      let offsetX, offsetY;
+      
+      const onMouseDown = (e) => {
         e.preventDefault();
         const rect = el.getBoundingClientRect();
-        const offsetX = e.clientX - rect.left;
-        const offsetY = e.clientY - rect.top;
+        offsetX = e.clientX - rect.left;
+        offsetY = e.clientY - rect.top;
 
-        function moveAt(mouseEvent) {
+        function onMouseMove(mouseEvent) {
           el.style.left = `${mouseEvent.clientX - offsetX}px`;
           el.style.top = `${mouseEvent.clientY - offsetY}px`;
         }
 
-        function stopMoving() {
-          document.removeEventListener('mousemove', moveAt);
-          document.removeEventListener('mouseup', stopMoving);
+        function onMouseUp() {
+          document.removeEventListener('mousemove', onMouseMove);
+          document.removeEventListener('mouseup', onMouseUp);
         }
 
-        document.addEventListener('mousemove', moveAt);
-        document.addEventListener('mouseup', stopMoving);
-      });
-    });
+        document.addEventListener('mousemove', onMouseMove);
+        document.addEventListener('mouseup', onMouseUp);
+      };
+
+      // Touch events for mobile
+      const onTouchStart = (e) => {
+        e.preventDefault();
+        const rect = el.getBoundingClientRect();
+        const touch = e.touches[0];
+        offsetX = touch.clientX - rect.left;
+        offsetY = touch.clientY - rect.top;
+
+        function onTouchMove(touchEvent) {
+          const touch = touchEvent.touches[0];
+          el.style.left = `${touch.clientX - offsetX}px`;
+          el.style.top = `${touch.clientY - offsetY}px`;
+        }
+
+        function onTouchEnd() {
+          document.removeEventListener('touchmove', onTouchMove);
+          document.removeEventListener('touchend', onTouchEnd);
+        }
+
+        document.addEventListener('touchmove', onTouchMove);
+        document.addEventListener('touchend', onTouchEnd);
+      };
+
+      el.addEventListener('mousedown', onMouseDown);
+      el.addEventListener('touchstart', onTouchStart);
+    }
+
+    // Make each element with the 'movable' class draggable
+    const elements = document.querySelectorAll('.movable');
+    elements.forEach(el => makeDraggable(el));
   </script>
 </body>
 </html>

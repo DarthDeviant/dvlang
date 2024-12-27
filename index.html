@@ -3,113 +3,139 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Fixed Dotted Borders</title>
+  <title>Minimal Desktop</title>
   <style>
     body {
       margin: 0;
-      font-family: Arial, sans-serif;
-      background-color: #f0f0f0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
+      font-family: 'Courier New', Courier, monospace;
+      background: #f5f5f5;
+      color: #333;
       height: 100vh;
-      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
     }
 
+    /* Top navigation */
+    .top-nav {
+      display: flex;
+      justify-content: space-between;
+      width: 90%;
+      margin-top: 20px;
+    }
+
+    .top-nav a {
+      text-decoration: none;
+      color: #666;
+      font-size: 14px;
+      transition: color 0.3s;
+    }
+
+    .top-nav a:hover {
+      color: #000;
+    }
+
+    /* Desktop-style content */
     .desktop {
+      flex: 1;
       position: relative;
       width: 100%;
-      height: 100%;
+      max-width: 1200px;
+      overflow: hidden;
     }
 
     .movable {
       position: absolute;
       cursor: grab;
+      transition: transform 0.3s;
     }
 
     .movable img {
-      display: block;
-      width: 100%;
+      width: 100px;
       height: auto;
     }
 
-    .dotted-border {
-      position: absolute;
-      border: 2px dotted black;
-      pointer-events: none;
-      display: none; /* Initially hidden */
+
+
+    .center-image {
+      width: 200px;
+      height: 200px;
+      cursor: pointer;
+      transform: translate(-50%, -50%);
+    }
+
+    /* Footer */
+    footer {
+      font-size: 12px;
+      color: #888;
+      margin-bottom: 20px;
+    }
+
+    footer a {
+      text-decoration: none;
+      color: #888;
+      margin: 0 10px;
+      transition: color 0.3s;
+    }
+
+    footer a:hover {
+      color: #000;
     }
   </style>
 </head>
 <body>
+  <div class="top-nav">
+    <a href="https://open.spotify.com/artist/5VEBUmdpm4TJF02VCuj1uq?si=_0JNtTKfRu2X4N4WCwWsLA" target="_blank">music</a>
+    <a href="https://darthdeviance.printify.me/" target="_blank">store →</a>
+    <a href="https://www.youtube.com/@darthdeviance" target="_blank">tour</a>
+  </div>
   <div class="desktop">
     <!-- Yellow Folder -->
-    <div class="movable" id="yellow-folder" style="top: 20%; left: 30%; width: 8vw;">
+    <a href="https://untitled.stream/library/project/pl3LAry3TLMzvur6dDVas" class="movable" id="yellow-folder" style="top: 20%; left: 30%;">
       <img src="yellow-image.jpg" alt="Yellow Folder">
-      <div class="dotted-border"></div>
-    </div>
+    </a>
 
     <!-- Gray Folder -->
-    <div class="movable" id="gray-folder" style="top: 20%; left: 70%; width: 8vw;">
+    <a href="https://untitled.stream/library/project/wINlzOmMpI9fosr8ON68w" class="movable" id="gray-folder" style="top: 20%; left: 70%;">
       <img src="gray-image.jpg" alt="Gray Folder">
-      <div class="dotted-border"></div>
-    </div>
+    </a>
 
     <!-- Center Image -->
-    <div class="movable" id="center-image" style="top: 50%; left: 50%; width: 18vw; transform: translate(-50%, -50%);">
-      <img src="center-image.jpg" alt="Center Image">
-      <div class="dotted-border"></div>
-    </div>
+    <a href="https://untitled.stream/library/project/SDB2RGINBSbjDQT5H0aCm" target="_blank" class="movable" id="center-image" style="top: 50%; left: 50%;">
+      <img src="center-image.jpg" alt="Center Image" class="center-image">
+    </a>
   </div>
+  <footer>
+    <a href="https://bsky.app/profile/darthdeviance.bsky.social" target="_blank">bsky</a> / 
+    <a href="https://www.reddit.com/user/Gloomy_Reference_160/" target="_blank">reddit</a> / 
+    <a href="https://www.youtube.com/@darthdeviance" target="_blank">youtube</a> / 
+    <a href="https://www.instagram.com/_dvyns/" target="_blank">instagram</a>
+  </footer>
 
   <script>
-    const movableElements = document.querySelectorAll('.movable');
-
-    movableElements.forEach((element) => {
-      const border = element.querySelector('.dotted-border');
-      const img = element.querySelector('img');
-
-      // Function to update the border's position and size
-      const updateBorder = () => {
-        const rect = img.getBoundingClientRect();
-        border.style.width = `${rect.width}px`;
-        border.style.height = `${rect.height}px`;
-        border.style.top = `${rect.top + window.scrollY}px`;
-        border.style.left = `${rect.left + window.scrollX}px`;
-      };
-
-      // Add dragging functionality
-      element.addEventListener('mousedown', (e) => {
+    // Make elements draggable
+    const elements = document.querySelectorAll('.movable');
+    elements.forEach(el => {
+      el.addEventListener('mousedown', (e) => {
         e.preventDefault();
-        border.style.display = 'block'; // Show the border
+        const rect = el.getBoundingClientRect();
+        const offsetX = e.clientX - rect.left;
+        const offsetY = e.clientY - rect.top;
 
-        let offsetX = e.clientX - element.getBoundingClientRect().left;
-        let offsetY = e.clientY - element.getBoundingClientRect().top;
+        function moveAt(mouseEvent) {
+          el.style.left = `${mouseEvent.clientX - offsetX}px`;
+          el.style.top = `${mouseEvent.clientY - offsetY}px`;
+        }
 
-        const moveAt = (e) => {
-          const newX = e.clientX - offsetX;
-          const newY = e.clientY - offsetY;
-
-          element.style.left = `${newX}px`;
-          element.style.top = `${newY}px`;
-
-          // Update the border's position
-          updateBorder();
-        };
-
-        const stopDragging = () => {
-          border.style.display = 'none'; // Hide the border
+        function stopMoving() {
           document.removeEventListener('mousemove', moveAt);
-          document.removeEventListener('mouseup', stopDragging);
-        };
+          document.removeEventListener('mouseup', stopMoving);
+        }
 
         document.addEventListener('mousemove', moveAt);
-        document.addEventListener('mouseup', stopDragging);
+        document.addEventListener('mouseup', stopMoving);
       });
-
-      // Ensure borders are positioned correctly when the page loads
-      window.addEventListener('load', updateBorder);
-      window.addEventListener('resize', updateBorder); // Recalculate on window resize
     });
   </script>
 </body>

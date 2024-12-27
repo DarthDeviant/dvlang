@@ -18,7 +18,6 @@
       overflow: hidden;
     }
 
-    /* Top navigation */
     .top-nav {
       display: flex;
       justify-content: space-between;
@@ -37,7 +36,6 @@
       color: #000;
     }
 
-    /* Desktop-style content */
     .desktop {
       flex: 1;
       position: relative;
@@ -58,11 +56,6 @@
       height: auto;
     }
 
-    .movable.grabbing {
-      outline: 2px dotted black;
-      outline-offset: 2px;
-    }
-
     .center-image {
       width: 18vw;
       height: 18vw;
@@ -70,8 +63,10 @@
       transform: translate(-50%, -50%);
     }
 
-    .center-image.grabbing {
-      transform: none; /* Temporarily remove transform when dragging */
+    .dotted-border {
+      position: absolute;
+      border: 2px dotted black;
+      display: none;
     }
 
     /* Footer */
@@ -114,6 +109,8 @@
     <a href="https://untitled.stream/library/project/SDB2RGINBSbjDQT5H0aCm" target="_blank" class="movable" id="center-image" style="top: 50%; left: 50%;">
       <img src="center-image.jpg" alt="Center Image" class="center-image">
     </a>
+    <!-- Dotted Border for Center Image -->
+    <div class="dotted-border" id="center-border"></div>
   </div>
   <footer>
     <a href="https://bsky.app/profile/darthdeviance.bsky.social" target="_blank">bsky</a> / 
@@ -125,32 +122,46 @@
   <script>
     // Make elements draggable
     const elements = document.querySelectorAll('.movable');
+    const centerImage = document.getElementById('center-image');
+    const centerBorder = document.getElementById('center-border');
+
     elements.forEach(el => {
       el.addEventListener('mousedown', (e) => {
         e.preventDefault();
-        el.classList.add('grabbing'); // Add the grabbing effect
+
         const rect = el.getBoundingClientRect();
         const offsetX = e.clientX - rect.left;
         const offsetY = e.clientY - rect.top;
 
-        // Remove transform for center-image during dragging
-        const isCenterImage = el.id === 'center-image';
-        if (isCenterImage) {
-          el.style.transform = 'none';
+        // Handle the center image specifically
+        if (el === centerImage) {
+          centerBorder.style.width = `${rect.width}px`;
+          centerBorder.style.height = `${rect.height}px`;
+          centerBorder.style.left = `${rect.left}px`;
+          centerBorder.style.top = `${rect.top}px`;
+          centerBorder.style.display = 'block';
         }
 
         function moveAt(mouseEvent) {
-          el.style.left = `${mouseEvent.clientX - offsetX}px`;
-          el.style.top = `${mouseEvent.clientY - offsetY}px`;
+          const left = mouseEvent.clientX - offsetX;
+          const top = mouseEvent.clientY - offsetY;
+
+          el.style.left = `${left}px`;
+          el.style.top = `${top}px`;
+
+          // Move the border along with the center image
+          if (el === centerImage) {
+            centerBorder.style.left = `${left}px`;
+            centerBorder.style.top = `${top}px`;
+          }
         }
 
         function stopMoving() {
-          el.classList.remove('grabbing'); // Remove the grabbing effect
-          if (isCenterImage) {
-            el.style.transform = 'translate(-50%, -50%)'; // Reapply transform for center image
-          }
           document.removeEventListener('mousemove', moveAt);
           document.removeEventListener('mouseup', stopMoving);
+          if (el === centerImage) {
+            centerBorder.style.display = 'none'; // Hide the border after dragging
+          }
         }
 
         document.addEventListener('mousemove', moveAt);

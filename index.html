@@ -64,10 +64,14 @@
     }
 
     .center-image {
-      width: 15vw;
-      height: 15vw;
+      width: 18vw;
+      height: 18vw;
       cursor: pointer;
       transform: translate(-50%, -50%);
+    }
+
+    .center-image.grabbing {
+      transform: none; /* Temporarily remove transform when dragging */
     }
 
     /* Footer */
@@ -129,6 +133,12 @@
         const offsetX = e.clientX - rect.left;
         const offsetY = e.clientY - rect.top;
 
+        // Remove transform for center-image during dragging
+        const isCenterImage = el.id === 'center-image';
+        if (isCenterImage) {
+          el.style.transform = 'none';
+        }
+
         function moveAt(mouseEvent) {
           el.style.left = `${mouseEvent.clientX - offsetX}px`;
           el.style.top = `${mouseEvent.clientY - offsetY}px`;
@@ -136,6 +146,9 @@
 
         function stopMoving() {
           el.classList.remove('grabbing'); // Remove the grabbing effect
+          if (isCenterImage) {
+            el.style.transform = 'translate(-50%, -50%)'; // Reapply transform for center image
+          }
           document.removeEventListener('mousemove', moveAt);
           document.removeEventListener('mouseup', stopMoving);
         }

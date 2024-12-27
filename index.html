@@ -3,61 +3,33 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>dvlang</title>
+  <title>Fixed Dotted Borders</title>
   <style>
     body {
       margin: 0;
-      font-family: 'Courier New', Courier, monospace;
-      background: #f5f5f5;
-      color: #333;
-      height: 100vh;
+      font-family: Arial, sans-serif;
+      background-color: #f0f0f0;
       display: flex;
-      flex-direction: column;
-      justify-content: space-between;
+      justify-content: center;
       align-items: center;
+      height: 100vh;
       overflow: hidden;
-    }
-
-    .top-nav {
-      display: flex;
-      justify-content: space-between;
-      width: 90%;
-      margin-top: 20px;
-    }
-
-    .top-nav a {
-      text-decoration: none;
-      color: #666;
-      font-size: 14px;
-      transition: color 0.3s;
-    }
-
-    .top-nav a:hover {
-      color: #000;
     }
 
     .desktop {
-      flex: 1;
       position: relative;
       width: 100%;
       height: 100%;
-      max-width: 100vw;
-      overflow: hidden;
     }
 
     .movable {
       position: absolute;
       cursor: grab;
-      transition: transform 0.3s;
     }
 
     .movable img {
-      width: 8vw;
-      height: auto;
-    }
-
-    .center-image {
-      width: 18vw;
+      display: block;
+      width: 100%;
       height: auto;
     }
 
@@ -65,101 +37,79 @@
       position: absolute;
       border: 2px dotted black;
       pointer-events: none;
-    }
-
-    /* Footer */
-    footer {
-      font-size: 1.2vw;
-      color: #888;
-      margin-bottom: 1vh;
-    }
-
-    footer a {
-      text-decoration: none;
-      color: #888;
-      margin: 0 10px;
-      transition: color 0.3s;
-    }
-
-    footer a:hover {
-      color: #000;
+      display: none; /* Initially hidden */
     }
   </style>
 </head>
 <body>
-  <div class="top-nav">
-    <a href="https://open.spotify.com/artist/5VEBUmdpm4TJF02VCuj1uq?si=_0JNtTKfRu2X4N4WCwWsLA" target="_blank">music</a>
-    <a href="https://darthdeviance.printify.me/" target="_blank">store →</a>
-    <a href="https://www.youtube.com/@darthdeviance" target="_blank">tour</a>
-  </div>
   <div class="desktop">
     <!-- Yellow Folder -->
-    <a href="https://untitled.stream/library/project/pl3LAry3TLMzvur6dDVas" class="movable" id="yellow-folder" style="top: 20%; left: 30%;">
+    <div class="movable" id="yellow-folder" style="top: 20%; left: 30%; width: 8vw;">
       <img src="yellow-image.jpg" alt="Yellow Folder">
-    </a>
-    <div class="dotted-border" id="yellow-border"></div>
+      <div class="dotted-border"></div>
+    </div>
 
     <!-- Gray Folder -->
-    <a href="https://untitled.stream/library/project/wINlzOmMpI9fosr8ON68w" class="movable" id="gray-folder" style="top: 20%; left: 70%;">
+    <div class="movable" id="gray-folder" style="top: 20%; left: 70%; width: 8vw;">
       <img src="gray-image.jpg" alt="Gray Folder">
-    </a>
-    <div class="dotted-border" id="gray-border"></div>
+      <div class="dotted-border"></div>
+    </div>
 
     <!-- Center Image -->
-    <a href="https://untitled.stream/library/project/SDB2RGINBSbjDQT5H0aCm" target="_blank" class="movable" id="center-image" style="top: 50%; left: 50%;">
-      <img src="center-image.jpg" alt="Center Image" class="center-image">
-    </a>
-    <div class="dotted-border" id="center-border"></div>
+    <div class="movable" id="center-image" style="top: 50%; left: 50%; width: 18vw; transform: translate(-50%, -50%);">
+      <img src="center-image.jpg" alt="Center Image">
+      <div class="dotted-border"></div>
+    </div>
   </div>
-  <footer>
-    <a href="https://bsky.app/profile/darthdeviance.bsky.social" target="_blank">bsky</a> / 
-    <a href="https://www.reddit.com/user/Gloomy_Reference_160/" target="_blank">reddit</a> / 
-    <a href="https://www.youtube.com/@darthdeviance" target="_blank">youtube</a> / 
-    <a href="https://www.instagram.com/_dvyns/" target="_blank">instagram</a>
-  </footer>
 
   <script>
-    const elements = document.querySelectorAll('.movable');
-    const borders = {
-      "yellow-folder": document.getElementById("yellow-border"),
-      "gray-folder": document.getElementById("gray-border"),
-      "center-image": document.getElementById("center-border"),
-    };
+    const movableElements = document.querySelectorAll('.movable');
 
-    elements.forEach(el => {
-      el.addEventListener("mousedown", (e) => {
-        const id = el.id;
-        const border = borders[id];
-        const rect = el.getBoundingClientRect();
-        const offsetX = e.clientX - rect.left;
-        const offsetY = e.clientY - rect.top;
+    movableElements.forEach((element) => {
+      const border = element.querySelector('.dotted-border');
+      const img = element.querySelector('img');
 
+      // Function to update the border's position and size
+      const updateBorder = () => {
+        const rect = img.getBoundingClientRect();
         border.style.width = `${rect.width}px`;
         border.style.height = `${rect.height}px`;
-        border.style.left = `${rect.left}px`;
-        border.style.top = `${rect.top}px`;
-        border.style.display = "block";
+        border.style.top = `${rect.top + window.scrollY}px`;
+        border.style.left = `${rect.left + window.scrollX}px`;
+      };
 
-        function moveAt(e) {
-          const x = e.clientX - offsetX;
-          const y = e.clientY - offsetY;
+      // Add dragging functionality
+      element.addEventListener('mousedown', (e) => {
+        e.preventDefault();
+        border.style.display = 'block'; // Show the border
 
-          el.style.left = `${x}px`;
-          el.style.top = `${y}px`;
+        let offsetX = e.clientX - element.getBoundingClientRect().left;
+        let offsetY = e.clientY - element.getBoundingClientRect().top;
 
-          border.style.left = `${x}px`;
-          border.style.top = `${y}px`;
-        }
+        const moveAt = (e) => {
+          const newX = e.clientX - offsetX;
+          const newY = e.clientY - offsetY;
 
-        function stopMoving() {
-          document.removeEventListener("mousemove", moveAt);
-          document.removeEventListener("mouseup", stopMoving);
-          border.style.display = "none";
-        }
+          element.style.left = `${newX}px`;
+          element.style.top = `${newY}px`;
 
-        document.addEventListener("mousemove", moveAt);
-        document.addEventListener("mouseup", stopMoving);
+          // Update the border's position
+          updateBorder();
+        };
+
+        const stopDragging = () => {
+          border.style.display = 'none'; // Hide the border
+          document.removeEventListener('mousemove', moveAt);
+          document.removeEventListener('mouseup', stopDragging);
+        };
+
+        document.addEventListener('mousemove', moveAt);
+        document.addEventListener('mouseup', stopDragging);
       });
+
+      // Ensure borders are positioned correctly when the page loads
+      window.addEventListener('load', updateBorder);
+      window.addEventListener('resize', updateBorder); // Recalculate on window resize
     });
   </script>
 </body>

@@ -58,16 +58,13 @@
 
     .center-image {
       width: 18vw;
-      height: 18vw;
-      cursor: pointer;
-      transform: translate(-50%, -50%);
+      height: auto;
     }
 
     .dotted-border {
       position: absolute;
       border: 2px dotted black;
-      display: none;
-      pointer-events: none; /* Prevent interference */
+      pointer-events: none;
     }
 
     /* Footer */
@@ -100,17 +97,18 @@
     <a href="https://untitled.stream/library/project/pl3LAry3TLMzvur6dDVas" class="movable" id="yellow-folder" style="top: 20%; left: 30%;">
       <img src="yellow-image.jpg" alt="Yellow Folder">
     </a>
+    <div class="dotted-border" id="yellow-border"></div>
 
     <!-- Gray Folder -->
     <a href="https://untitled.stream/library/project/wINlzOmMpI9fosr8ON68w" class="movable" id="gray-folder" style="top: 20%; left: 70%;">
       <img src="gray-image.jpg" alt="Gray Folder">
     </a>
+    <div class="dotted-border" id="gray-border"></div>
 
     <!-- Center Image -->
     <a href="https://untitled.stream/library/project/SDB2RGINBSbjDQT5H0aCm" target="_blank" class="movable" id="center-image" style="top: 50%; left: 50%;">
       <img src="center-image.jpg" alt="Center Image" class="center-image">
     </a>
-    <!-- Dotted Border for Center Image -->
     <div class="dotted-border" id="center-border"></div>
   </div>
   <footer>
@@ -121,57 +119,48 @@
   </footer>
 
   <script>
-    // Make elements draggable
     const elements = document.querySelectorAll('.movable');
-    const centerImage = document.getElementById('center-image');
-    const centerBorder = document.getElementById('center-border');
+    const borders = {
+      "yellow-folder": document.getElementById("yellow-border"),
+      "gray-folder": document.getElementById("gray-border"),
+      "center-image": document.getElementById("center-border"),
+    };
 
     elements.forEach(el => {
-      el.addEventListener('mousedown', (e) => {
-        e.preventDefault();
-
+      el.addEventListener("mousedown", (e) => {
+        const id = el.id;
+        const border = borders[id];
         const rect = el.getBoundingClientRect();
         const offsetX = e.clientX - rect.left;
         const offsetY = e.clientY - rect.top;
 
-        // Handle the center image specifically
-        if (el === centerImage) {
-          updateBorder(rect);
-          centerBorder.style.display = 'block';
-        }
+        border.style.width = `${rect.width}px`;
+        border.style.height = `${rect.height}px`;
+        border.style.left = `${rect.left}px`;
+        border.style.top = `${rect.top}px`;
+        border.style.display = "block";
 
-        function moveAt(mouseEvent) {
-          const left = mouseEvent.clientX - offsetX;
-          const top = mouseEvent.clientY - offsetY;
+        function moveAt(e) {
+          const x = e.clientX - offsetX;
+          const y = e.clientY - offsetY;
 
-          el.style.left = `${left}px`;
-          el.style.top = `${top}px`;
+          el.style.left = `${x}px`;
+          el.style.top = `${y}px`;
 
-          // Move the border along with the center image
-          if (el === centerImage) {
-            updateBorder(el.getBoundingClientRect());
-          }
+          border.style.left = `${x}px`;
+          border.style.top = `${y}px`;
         }
 
         function stopMoving() {
-          document.removeEventListener('mousemove', moveAt);
-          document.removeEventListener('mouseup', stopMoving);
-          if (el === centerImage) {
-            centerBorder.style.display = 'none'; // Hide the border after dragging
-          }
+          document.removeEventListener("mousemove", moveAt);
+          document.removeEventListener("mouseup", stopMoving);
+          border.style.display = "none";
         }
 
-        document.addEventListener('mousemove', moveAt);
-        document.addEventListener('mouseup', stopMoving);
+        document.addEventListener("mousemove", moveAt);
+        document.addEventListener("mouseup", stopMoving);
       });
     });
-
-    function updateBorder(rect) {
-      centerBorder.style.width = `${rect.width}px`;
-      centerBorder.style.height = `${rect.height}px`;
-      centerBorder.style.left = `${rect.left}px`;
-      centerBorder.style.top = `${rect.top}px`;
-    }
   </script>
 </body>
 </html>

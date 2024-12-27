@@ -58,7 +58,10 @@
       height: auto;
     }
 
-
+    .movable.grabbing {
+      outline: 2px dotted black;
+      outline-offset: 2px;
+    }
 
     .center-image {
       width: 18vw;
@@ -121,6 +124,7 @@
     elements.forEach(el => {
       el.addEventListener('mousedown', (e) => {
         e.preventDefault();
+        el.classList.add('grabbing'); // Add the grabbing effect
         const rect = el.getBoundingClientRect();
         const offsetX = e.clientX - rect.left;
         const offsetY = e.clientY - rect.top;
@@ -131,6 +135,7 @@
         }
 
         function stopMoving() {
+          el.classList.remove('grabbing'); // Remove the grabbing effect
           document.removeEventListener('mousemove', moveAt);
           document.removeEventListener('mouseup', stopMoving);
         }

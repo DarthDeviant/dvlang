@@ -147,6 +147,13 @@
         function onMouseMove(mouseEvent) {
           el.style.left = `${mouseEvent.clientX - offsetX}px`;
           el.style.top = `${mouseEvent.clientY - offsetY}px`;
+
+          // Save position in localStorage
+          const id = el.id;
+          localStorage.setItem(id, JSON.stringify({
+            left: el.style.left,
+            top: el.style.top
+          }));
         }
 
         function onMouseUp() {

@@ -193,6 +193,14 @@
 
       el.addEventListener('mousedown', onMouseDown);
       el.addEventListener('touchstart', onTouchStart);
+
+       // Load position from localStorage
+      const savedPosition = localStorage.getItem(el.id);
+      if (savedPosition) {
+        const { left, top } = JSON.parse(savedPosition);
+        el.style.left = left;
+        el.style.top = top;
+      }
     }
 
     // Make each element with the 'movable' class draggable

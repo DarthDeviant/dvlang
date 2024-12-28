@@ -135,7 +135,7 @@
 
   <script>
     // Function to make elements draggable
-    function makeDraggable(el) {
+    function makeDraggable(el, defaultPosition) {
       let offsetX, offsetY;
 
       const onMouseDown = (e) => {
@@ -197,22 +197,35 @@
       el.addEventListener('mousedown', onMouseDown);
       el.addEventListener('touchstart', onTouchStart);
 
-      // Load position from localStorage or fallback to initial position
+      // Load position from localStorage or set to default position
       const savedPosition = localStorage.getItem(el.id);
       if (savedPosition) {
         const { left, top } = JSON.parse(savedPosition);
         el.style.left = left;
         el.style.top = top;
+      } else if (defaultPosition) {
+        el.style.left = defaultPosition.left;
+        el.style.top = defaultPosition.top;
       } else {
-        // Ensure elements use their original HTML positions if not saved
         el.style.left = '';
         el.style.top = '';
       }
     }
 
+    // Define default positions for each element
+    const defaultPositions = {
+      'yellow-folder': { left: '10%', top: '10%' },
+      'gray-folder': { left: '70%', top: '10%' },
+      'center-image': { left: '40%', top: '30%' },
+      'new-image': { left: '40%', top: '70%' }
+    };
+
     // Make each element with the 'movable' class draggable
     const elements = document.querySelectorAll('.movable');
-    elements.forEach(el => makeDraggable(el));
+    elements.forEach(el => {
+      const defaultPosition = defaultPositions[el.id];
+      makeDraggable(el, defaultPosition);
+    });
   </script>
 </body>
 </html>

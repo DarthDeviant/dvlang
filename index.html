@@ -106,22 +106,22 @@
   </div>
   <div class="desktop">
     <!-- Yellow Folder -->
-    <a href="https://untitled.stream/library/project/pl3LAry3TLMzvur6dDVas" class="movable" id="yellow-folder" style="top: 20%; left: 30%;">
+    <a href="https://untitled.stream/library/project/pl3LAry3TLMzvur6dDVas" class="movable" id="yellow-folder">
       <img src="yellow-image.jpg" alt="Yellow Folder">
     </a>
 
     <!-- Gray Folder -->
-    <a href="https://untitled.stream/library/project/wINlzOmMpI9fosr8ON68w" class="movable" id="gray-folder" style="top: 20%; left: 70%;">
+    <a href="https://untitled.stream/library/project/wINlzOmMpI9fosr8ON68w" class="movable" id="gray-folder">
       <img src="gray-image.jpg" alt="Gray Folder">
     </a>
 
     <!-- Center Image -->
-    <a href="https://untitled.stream/library/project/SDB2RGINBSbjDQT5H0aCm" target="_blank" class="movable" id="center-image" style="top: 50%; left: 50%;">
+    <a href="https://untitled.stream/library/project/SDB2RGINBSbjDQT5H0aCm" target="_blank" class="movable" id="center-image">
       <img src="center-image.jpg" alt="Center Image" class="center-image">
     </a>
 
     <!-- New Image -->
-    <a href="https://untitled.stream/library/project/1KD0qUOgOwvSgW3vRbpn6" class="movable" id="new-image" style="top: 40%; left: 60%;">
+    <a href="https://untitled.stream/library/project/1KD0qUOgOwvSgW3vRbpn6" class="movable" id="new-image">
       <img src="new-image.png" alt="New Image">
     </a>
   </div>
@@ -191,6 +191,18 @@
     // Make each element with the 'movable' class draggable
     const elements = document.querySelectorAll('.movable');
     elements.forEach(el => makeDraggable(el));
+
+    // Randomize positions of elements
+    function randomizePositions() {
+      elements.forEach(el => {
+        const randomTop = Math.random() * 80; // Percentage for top
+        const randomLeft = Math.random() * 80; // Percentage for left
+        el.style.top = `${randomTop}%`;
+        el.style.left = `${randomLeft}%`;
+      });
+    }
+
+    randomizePositions();
   </script>
 </body>
 </html>

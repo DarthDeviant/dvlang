@@ -197,12 +197,16 @@
       el.addEventListener('mousedown', onMouseDown);
       el.addEventListener('touchstart', onTouchStart);
 
-      // Load position from localStorage
+      // Load position from localStorage or fallback to initial position
       const savedPosition = localStorage.getItem(el.id);
       if (savedPosition) {
         const { left, top } = JSON.parse(savedPosition);
         el.style.left = left;
         el.style.top = top;
+      } else {
+        // Ensure elements use their original HTML positions if not saved
+        el.style.left = '';
+        el.style.top = '';
       }
     }
 

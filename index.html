@@ -192,13 +192,39 @@
     const elements = document.querySelectorAll('.movable');
     elements.forEach(el => makeDraggable(el));
 
-    // Randomize positions of elements
+    // Check if two elements overlap
+    function isOverlapping(el1, el2) {
+      const rect1 = el1.getBoundingClientRect();
+      const rect2 = el2.getBoundingClientRect();
+
+      return !(
+        rect1.top + rect1.height < rect2.top ||
+        rect1.top > rect2.top + rect2.height ||
+        rect1.left + rect1.width < rect2.left ||
+        rect1.left > rect2.left + rect2.width
+      );
+    }
+
+    // Randomize positions of elements ensuring no overlap
     function randomizePositions() {
+      const container = document.querySelector('.desktop');
+      const containerRect = container.getBoundingClientRect();
+      const maxAttempts = 100; // Limit to prevent infinite loops
+
       elements.forEach(el => {
-        const randomTop = Math.random() * 80; // Percentage for top
-        const randomLeft = Math.random() * 80; // Percentage for left
-        el.style.top = `${randomTop}%`;
-        el.style.left = `${randomLeft}%`;
+        let attempts = 0;
+        let randomTop, randomLeft;
+
+        do {
+          randomTop = Math.random() * (containerRect.height - el.offsetHeight);
+          randomLeft = Math.random() * (containerRect.width - el.offsetWidth);
+          el.style.top = `${randomTop}px`;
+          el.style.left = `${randomLeft}px`;
+          attempts++;
+        } while (
+          Array.from(elements).some(otherEl => otherEl !== el && isOverlapping(el, otherEl)) &&
+          attempts < maxAttempts
+        );
       });
     }
 

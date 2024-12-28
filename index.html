@@ -42,7 +42,9 @@
       position: relative;
       width: 100%;
       max-width: 1200px;
+      height: 80%; /* Restrict height for randomization */
       overflow: hidden;
+      border: 1px solid #ccc; /* Visual boundary */
     }
 
     .movable {
@@ -216,8 +218,8 @@
         let randomTop, randomLeft;
 
         do {
-          randomTop = Math.random() * (containerRect.height - el.offsetHeight);
-          randomLeft = Math.random() * (containerRect.width - el.offsetWidth);
+          randomTop = Math.random() * (containerRect.height * 0.8 - el.offsetHeight) + containerRect.height * 0.1;
+          randomLeft = Math.random() * (containerRect.width * 0.8 - el.offsetWidth) + containerRect.width * 0.1;
           el.style.top = `${randomTop}px`;
           el.style.left = `${randomLeft}px`;
           attempts++;

@@ -52,17 +52,20 @@
       transition: transform 0.3s;
     }
 
-    .movable img, .center-image {
+    .movable img {
       width: 100px;
       height: auto;
-      border: 2px dotted black; /* Add black dotted border */
     }
 
     .center-image {
       width: 200px;
       height: 200px;
       cursor: pointer;
-      border: 2px dotted black; /* Add black dotted border for the center image */
+    }
+
+    .dragging {
+      outline: 3px dotted black;
+      outline-offset: 5px;
     }
 
     /* Footer */
@@ -142,6 +145,8 @@
 
       const onMouseDown = (e) => {
         e.preventDefault();
+        el.classList.add('dragging');
+
         const rect = el.getBoundingClientRect();
         offsetX = e.clientX - rect.left;
         offsetY = e.clientY - rect.top;
@@ -159,6 +164,7 @@
         }
 
         function onMouseUp() {
+          el.classList.remove('dragging');
           document.removeEventListener('mousemove', onMouseMove);
           document.removeEventListener('mouseup', onMouseUp);
         }
@@ -169,6 +175,8 @@
 
       const onTouchStart = (e) => {
         e.preventDefault();
+        el.classList.add('dragging');
+
         const rect = el.getBoundingClientRect();
         const touch = e.touches[0];
         offsetX = touch.clientX - rect.left;
@@ -188,6 +196,7 @@
         }
 
         function onTouchEnd() {
+          el.classList.remove('dragging');
           document.removeEventListener('touchmove', onTouchMove);
           document.removeEventListener('touchend', onTouchEnd);
         }
